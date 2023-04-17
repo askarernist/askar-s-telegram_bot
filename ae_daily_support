@@ -1,0 +1,50 @@
+import logging
+import random
+from telegram.ext import Updater, CommandHandler
+
+# Установка уровня логирования
+logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+                    level=logging.INFO)
+
+# Получение случайной афирмации
+def get_affirmation():
+    affirmations = [
+        "Вы замечательны таким, каким есть!",
+        "У вас есть способности и сила, чтобы достичь всех своих целей!",
+        "Каждый день вы становитесь все лучше и лучше!",
+        "Вы заслуживаете успеха и счастья!",
+        "Верьте в себя и свои возможности!",
+        "Вы уникальны и особенны!",
+        "У вас есть потенциал для великих дел!",
+        "Вы способны преодолеть любые трудности и достичь своих целей!",
+        "Вы стоите того, чтобы добиваться только лучшего!",
+        "Ваше настоящее и будущее наполнены возможностями и успехами!"
+    ]
+    return random.choice(affirmations)
+
+# Обработка команды /start
+def start(update, context):
+    context.bot.send_message(chat_id=update.effective_chat.id, text='Привет! Я бот афирмаций для мотивации. Чтобы получить афирмацию, отправьте команду /affirmation.')
+
+# Обработка команды /affirmation
+def affirmation(update, context):
+    affirmation_text = get_affirmation()
+    context.bot.send_message(chat_id=update.effective_chat.id, text=affirmation_text)
+
+def main():
+    # Инициализация бота с использованием токена API
+    updater = Updater(token='YOUR_BOT_TOKEN', use_context=True)
+    dispatcher = updater.dispatcher
+
+    # Добавление обработчиков команд
+    start_handler = CommandHandler('start', start)
+    affirmation_handler = CommandHandler('affirmation', affirmation)
+    dispatcher.add_handler(start_handler)
+    dispatcher.add_handler(affirmation_handler)
+
+    # Запуск бота
+    updater.start_polling()
+    updater.idle()
+
+if __name__ == '__main__':
+    main()
